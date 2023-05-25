@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Checkout sources
         uses: actions/checkout@v3
-      
+
       - name: Install stable toolchain
         uses: dtolnay/rust-toolchain@stable
 
@@ -27,7 +27,5 @@ jobs:
       - name: Run cargo clippy
         run: cargo clippy
 
-	- name: Check formatting
-	  run: cargo fmt --check
-  
-  
+      - name: Check formatting
+        run: cargo fmt --check
