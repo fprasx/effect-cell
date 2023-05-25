@@ -1,22 +1,33 @@
 # `EffectCell`
 
 A container that runs an effect every time its data is mutated.
-The effect is run with the old data.
-
-You can mutate an `EffectCell` using the `update` method or the ~fancy~
-`cell <<= val` syntax.
-
-`EffectCell` does is also `#![no_std]`!
+In essence, a slimed down implementation of the Observer pattern using Rust's `Fn` trait.
 
 ```rust
 use effect_cell::EffectCell;
 
 fn main() {
-    let mut counter = 0;
-    let mut printer = EffectCell::new(0, |_| counter += 1);
-    printer <<= 2; // counter increments
-    printer <<= 4; // counter increments
-    assert_eq!(counter, 2)
+    let mut effect_cell = EffectCell::new(0);
+    effect_cell.bind(|data| {println!("{data}");});
+    effect_cell.update(1);
+    // Prints "1"
+}
+```
+
+## Operator Passthrough
+
+The `XAssign` traits have been setup so that they can modify the internal data
+without the need for a call through `update_lambda`.
+They will always call effects.
+
+```rust
+use effect_cell::EffectCell;
+
+fn main() {
+    let mut effect_cell = EffectCell::new(0);
+    effect_cell.bind(|data| {println!("{data}");});
+    effect_cell += 1;
+    // Prints "1"
 }
 ```
 
@@ -24,12 +35,12 @@ fn main() {
 
 Licensed under either of
 
--   Apache License, Version 2.0
-    ([LICENSE-APACHE](https://github.com/fprasx/peapod/blob/main/LICENSE-APACHE)
-    or http://www.apache.org/licenses/LICENSE-2.0)
--   MIT license
-    ([LICENSE-MIT](https://github.com/fprasx/peapod/blob/main/LICENSE-MIT) or
-    http://opensource.org/licenses/MIT)
+- Apache License, Version 2.0
+  ([LICENSE-APACHE](https://github.com/fprasx/peapod/blob/main/LICENSE-APACHE)
+  or http://www.apache.org/licenses/LICENSE-2.0)
+- MIT license
+  ([LICENSE-MIT](https://github.com/fprasx/peapod/blob/main/LICENSE-MIT) or
+  http://opensource.org/licenses/MIT)
 
 at your option.
 
