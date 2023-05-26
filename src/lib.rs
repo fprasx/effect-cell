@@ -7,6 +7,7 @@ use core::ops::{
 
 /// A container that runs one or many effects on data mutation.
 /// The effect is run after data is updated as per the conventions of the Observer data structure.
+/// Effects are run in the order that they were bound to [`EffectCell`] in.
 ///
 /// # Examples
 ///
@@ -146,6 +147,7 @@ impl<T: Debug> Debug for EffectCell<T> {
 
 /// A container that runs one or many effects on data mutation.
 /// Effects are run either before or after data is updated depending on their [`EffectOrder`]
+/// Effects are run in the order that they were bound to each [`EffectOrder`] in [`OrderedEffectCell`].
 ///
 /// # Examples
 ///
