@@ -20,6 +20,7 @@ use core::ops::{
 /// ```
 pub struct EffectCell<T> {
     data: T,
+    #[allow(clippy::type_complexity)]
     effects: Vec<Box<dyn FnMut(&T)>>,
 }
 
@@ -145,6 +146,12 @@ impl<T: Debug> Debug for EffectCell<T> {
     }
 }
 
+impl<T> AsRef<T> for EffectCell<T> {
+    fn as_ref(&self) -> &T {
+        &self.data
+    }
+}
+
 /// A container that runs one or many effects on data mutation.
 /// Effects are run either before or after data is updated depending on their [`EffectOrder`]
 /// Effects are run in the order that they were bound to each [`EffectOrder`] in [`OrderedEffectCell`].
@@ -174,7 +181,9 @@ impl<T: Debug> Debug for EffectCell<T> {
 /// ```
 pub struct OrderedEffectCell<T> {
     data: T,
+    #[allow(clippy::type_complexity)]
     prior_effects: Vec<Box<dyn FnMut(&T)>>,
+    #[allow(clippy::type_complexity)]
     post_effects: Vec<Box<dyn FnMut(&T)>>,
 }
 
@@ -301,6 +310,12 @@ impl<T> OrderedEffectCell<T> {
     /// Updates the inner value using the provided function without running any effects
     pub fn set_lambda<F: FnMut(&T) + 'static>(&mut self, mut lambda: F) {
         lambda(&mut self.data);
+    }
+}
+
+impl<T> AsRef<T> for OrderedEffectCell<T> {
+    fn as_ref(&self) -> &T {
+        &self.data
     }
 }
 
